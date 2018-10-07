@@ -7,8 +7,8 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet } from 'react-native';
-import TaskList from './src/TaskList/TaskList';
+import {Platform, StyleSheet, Alert } from 'react-native';
+import TaskList from './src/Task/TaskList';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -26,14 +26,30 @@ export default class App extends Component<Props> {
     this.state = {
       todos: [
         {
-          tasks: 'Learn React Native'
+          task: 'Learn React Native'
         },
         {
-          tasks: 'Learn Redux'
+          task: 'Learn Redux'
         }
       ],
       extraData_todos: false,
     }
+  }
+
+  onAdd() {
+    console.log("On Add..");
+    Alert.alert(
+        'Remote Configure',
+        'Accept Remote Configure from ?',
+        [
+          { text: 'Cancel', onPress: () => { }, style: 'cancel' },
+          {
+            text: 'OK', onPress: () => {
+            }
+          },
+        ],
+        { cancelable: false }
+    );
   }
 
   render() {
@@ -42,6 +58,7 @@ export default class App extends Component<Props> {
         <TaskList
           todos={this.state.todos}
           extraData_todos={this.state.extraData_todos}
+          onAdd={this.onAdd.bind(this)}
         />
       // </View>
     );
