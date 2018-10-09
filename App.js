@@ -10,6 +10,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Alert } from 'react-native';
 import TaskList from './src/Task/TaskList';
 import RootNavigation from './src/Navigation/RootNavigation';
+import store from './src/Redux/todoStore';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -24,20 +25,25 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
 
-    this.state = {
-      checkedRoot: true,
-      isTnCAccepted: true,
+    // this.state = {
+    //   checkedRoot: true,
+    //   isTnCAccepted: true,
 
-      todos: [
-        {
-          task: 'Learn React Native'
-        },
-        {
-          task: 'Learn Redux'
-        }
-      ],
-      extraData_todos: false,
-    }
+    //   todos: [
+    //     {
+    //       task: 'Learn React Native'
+    //     },
+    //     {
+    //       task: 'Learn Redux'
+    //     }
+    //   ],
+    //   extraData_todos: false,
+    // }
+    this.state = store.getState();
+
+    store.subscribe(() => {
+      this.setState(store.getState());
+    })
   }
 
   onAddOpen(navigation) {
@@ -60,10 +66,14 @@ export default class App extends Component<Props> {
   }
 
   onAddPress(navigation, task) {
-    let todos = this.state.todos;
-    todos.push({task: task});
-    this.setState({
-      todos: todos
+    // let todos = this.state.todos;
+    // todos.push({task: task});
+    // this.setState({
+    //   todos: todos
+    // });
+    store.dispatch({
+      type: 'ADD_TODO',
+      task: task
     });
     console.log('A task was added: ', task);
     navigation.goBack();
@@ -75,10 +85,14 @@ export default class App extends Component<Props> {
 
   onDone(todo) {
     console.log("onDone pressed: ", todo);
-    let filteredTodos = this.state.todos.filter((fTodo) => {
-      return fTodo !== todo; 
+    // let filteredTodos = this.state.todos.filter((fTodo) => {
+    //   return fTodo !== todo; 
+    // });
+    // this.setState({ todos: filteredTodos });
+    store.dispatch({
+      type: 'DONE_TODO',
+      todo: todo,
     });
-    this.setState({ todos: filteredTodos });
   }
 
   render() {
