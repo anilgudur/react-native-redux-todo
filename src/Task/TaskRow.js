@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight } from "react-native";
 import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
@@ -18,13 +18,32 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     fontWeight: '300'
+  },
+  doneButton: {
+    borderRadius: 5,
+    backgroundColor: '#EAEAEA',
+    padding: 5,
   }
 });
 
 export default class TaskRow extends Component {
 
+  static propTypes = {
+    item: PropTypes.shape({
+      task: PropTypes.string.isRequired,
+    }).isRequired,
+    onDone: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
+
+    this.onDonePressed = this.onDonePressed.bind(this);
+  }
+
+  onDonePressed() {
+    console.log('this.props.item: ', this.props.item);
+    this.props.onDone(this.props.item);
   }
 
   render() {
@@ -33,13 +52,10 @@ export default class TaskRow extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{item.task}</Text>
+        <TouchableHighlight style={styles.doneButton} onPress={this.onDonePressed}>
+          <Text>Done</Text>
+        </TouchableHighlight>
       </View>
     )
   }
-}
-
-TaskRow.propTypes = {
-  item: PropTypes.shape({
-    task: PropTypes.string.isRequired
-  }).isRequired
 }

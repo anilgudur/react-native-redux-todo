@@ -9,6 +9,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Alert } from 'react-native';
 import TaskList from './src/Task/TaskList';
+import RootNavigation from './src/Navigation/RootNavigation';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -24,6 +25,9 @@ export default class App extends Component<Props> {
     super(props);
 
     this.state = {
+      checkedRoot: true,
+      isTnCAccepted: true,
+
       todos: [
         {
           task: 'Learn React Native'
@@ -36,30 +40,66 @@ export default class App extends Component<Props> {
     }
   }
 
-  onAdd() {
+  onAddOpen(navigation) {
     console.log("On Add..");
-    Alert.alert(
-        'Remote Configure',
-        'Accept Remote Configure from ?',
-        [
-          { text: 'Cancel', onPress: () => { }, style: 'cancel' },
-          {
-            text: 'OK', onPress: () => {
-            }
-          },
-        ],
-        { cancelable: false }
-    );
+    console.log("this.props:: ", this.props);
+    console.log('navigation: ', navigation);
+    navigation.navigate('AddTaskRoute');
+    // Alert.alert(
+    //     'Remote Configure',
+    //     'Accept Remote Configure from ?',
+    //     [
+    //       { text: 'Cancel', onPress: () => { }, style: 'cancel' },
+    //       {
+    //         text: 'OK', onPress: () => {
+    //         }
+    //       },
+    //     ],
+    //     { cancelable: false }
+    // );
+  }
+
+  onAddPress(navigation, task) {
+    let todos = this.state.todos;
+    todos.push({task: task});
+    this.setState({
+      todos: todos
+    });
+    console.log('A task was added: ', task);
+    navigation.goBack();
+  }
+
+  onCancelPress(navigation) {
+    navigation.goBack();
+  }
+
+  onDone(todo) {
+    console.log("onDone pressed: ", todo);
+    let filteredTodos = this.state.todos.filter((fTodo) => {
+      return fTodo !== todo; 
+    });
+    this.setState({ todos: filteredTodos });
   }
 
   render() {
     return (
       // <View style={styles.container}>
-        <TaskList
+        <RootNavigation
+          checkedRoot={this.state.checkedRoot}
+          isTnCAccepted={this.state.isTnCAccepted}
+
           todos={this.state.todos}
           extraData_todos={this.state.extraData_todos}
-          onAdd={this.onAdd.bind(this)}
+          onAddOpen={this.onAddOpen.bind(this)}
+          onAddPress={this.onAddPress.bind(this)}
+          onCancelPress={this.onCancelPress.bind(this)}
+          onDone={this.onDone.bind(this)}
         />
+        // <TaskList
+        //   todos={this.state.todos}
+        //   extraData_todos={this.state.extraData_todos}
+        //   onAddOpen={this.onAddOpen.bind(this)}
+        // />
       // </View>
     );
   }

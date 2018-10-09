@@ -28,8 +28,30 @@ const styles = StyleSheet.create({
 
 export default class TaskList extends Component {
 
+  // You can declare that a prop is a specific JS type.
+  // static propTypes = {
+  //   todos: PropTypes.arrayOf(PropTypes.object).isRequired,
+  //   onAddOpen: PropTypes.func.isRequired,
+  // };
+  static propTypes = {
+    screenProps: PropTypes.shape({
+      todos: PropTypes.arrayOf(PropTypes.object).isRequired,
+      onAddOpen: PropTypes.func.isRequired,
+      onDone: PropTypes.func.isRequired,
+    }).isRequired
+  };
+
   constructor(props) {
     super(props);
+    console.log('this.props.screenProps=>> ', this.props);
+
+    this.addTask = this.addTask.bind(this);
+  }
+
+  addTask() {
+    console.log("Add pressed");
+    this.props.screenProps.onAddOpen(this.props.navigation);
+    //this.props.navigation.navigate('AddTaskRoute')
   }
 
   _keyExtractor_taskRow = (item, index) => index.toString();
@@ -38,6 +60,7 @@ export default class TaskList extends Component {
       id={index}
       index={index}
       item={item}
+      onDone={this.props.screenProps.onDone}
     />
   );
 
@@ -45,14 +68,14 @@ export default class TaskList extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.props.todos}
-          extraData={this.props.extraData_todos}
+          data={this.props.screenProps.todos}
+          extraData={this.props.screenProps.extraData_todos}
           keyExtractor={this._keyExtractor_taskRow}
           renderItem={this._renderItem_taskRow}
         />
 
         <TouchableHighlight
-          onPress={this.props.onAdd}
+          onPress={this.addTask}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Add One</Text>
@@ -62,9 +85,5 @@ export default class TaskList extends Component {
   }
 }
 
-// You can declare that a prop is a specific JS type. 
-TaskList.propTypes = {
-  todos: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onAdd: PropTypes.func.isRequired,
-};
+
 
