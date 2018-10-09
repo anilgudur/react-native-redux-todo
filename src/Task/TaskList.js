@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import { View, StyleSheet, FlatList, TouchableHighlight, Text } from "react-native";
+import { View, StyleSheet, FlatList, TouchableHighlight, Text, Switch } from "react-native";
 import PropTypes from 'prop-types';
 import TaskRow from './TaskRow';
 
@@ -23,6 +23,15 @@ const styles = StyleSheet.create({
     color: '#FAFAFA',
     fontSize: 20,
     fontWeight: '600',
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  toggleText: {
+    fontSize: 20,
+    paddingLeft: 10,
+    paddingTop: 3,
   }
 });
 
@@ -38,6 +47,8 @@ export default class TaskList extends Component {
       todos: PropTypes.arrayOf(PropTypes.object).isRequired,
       onAddOpen: PropTypes.func.isRequired,
       onDone: PropTypes.func.isRequired,
+      filter: PropTypes.string.isRequired,
+      onToggle: PropTypes.func.isRequired,
     }).isRequired
   };
 
@@ -67,6 +78,15 @@ export default class TaskList extends Component {
   render() {
     return (
       <View style={styles.container}>
+
+        <View style={styles.toggleRow}>
+          <Switch
+            value={this.props.screenProps.filter !== 'PENDING'}
+            onValueChange={this.props.screenProps.onToggle}
+          />
+          <Text style={styles.toggleText}>Showing {this.props.screenProps.todos.length} {this.props.screenProps.filter} todo(s)</Text>
+        </View>
+
         <FlatList
           data={this.props.screenProps.todos}
           extraData={this.props.screenProps.extraData_todos}

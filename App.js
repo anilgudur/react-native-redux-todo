@@ -95,6 +95,12 @@ export default class App extends Component<Props> {
     });
   }
 
+  onToggle() {
+    store.dispatch({
+      type: 'TOGGLE_STATE',
+    });
+  }
+
   render() {
     return (
       // <View style={styles.container}>
@@ -108,6 +114,8 @@ export default class App extends Component<Props> {
           onAddPress={this.onAddPress.bind(this)}
           onCancelPress={this.onCancelPress.bind(this)}
           onDone={this.onDone.bind(this)}
+          filter={this.state.filter}
+          onToggle={this.onToggle.bind(this)}
         />
         // <TaskList
         //   todos={this.state.todos}
